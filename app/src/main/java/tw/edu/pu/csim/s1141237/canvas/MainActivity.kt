@@ -67,12 +67,17 @@ fun Canvascreen(modifier: Modifier = Modifier) {
     val minionsImage: ImageBitmap =
         ImageBitmap.imageResource(id = R.drawable.minions)
 
-    // 2. 新增：啟動一個協程，每秒將位移增加 10f
     LaunchedEffect(gameover) {
         while (!gameover) {
-            delay(50L) // 暫停 1000 毫秒 (1 秒)
-            minionsX += 10
-            minionsY += 10
+            delay(1L)
+            minionsX += 1f
+            minionsY += 1f
+
+
+            if (minionsX > canvasWidth || minionsY > canvasHeight) {
+                minionsX = 0f
+                minionsY = 0f
+            }
         }
     }
 
@@ -80,20 +85,20 @@ fun Canvascreen(modifier: Modifier = Modifier) {
         Canvas(
             modifier = modifier
                 .fillMaxSize()
-                // 建議修改：在這裡取得畫布大小，避免在 drawScope 中寫入 State
+
                 .onSizeChanged { size ->
                     canvasWidth = size.width.toFloat()
                     canvasHeight = size.height.toFloat()
                 }
         ) {
-            // 繪製洋紅色的圓, 半徑 100, 圓心 (100,100)
+
             drawCircle(
                 Color.Magenta,
                 100f,
                 Offset(100f, 100f)
             )
 
-            // 繪製藍色空心矩形, 左上角 (300,200), 寬度與高度 200
+
             drawRect(
                 Color.Blue,
                 Offset(300f, 200f),
@@ -108,7 +113,7 @@ fun Canvascreen(modifier: Modifier = Modifier) {
                 strokeWidth = 10f
             )
 
-            // 3. 修改：將 translate 的 left (X軸) 綁定到 minionXOffset 狀態
+
             translate(left = minionsX, minionsY) {
                 drawImage(minionsImage)
             }
